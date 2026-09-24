@@ -17,10 +17,14 @@ static char *skip_ws(char *s) {
 static void parse_headers(char *text, Headers *h) {
     for (char *line = strtok(text, "\n"); line != NULL; line = strtok(NULL, "\n")) {
         char *colon = strchr(line, ':');   
+        if (!colon) continue;
 
-        *colon = '\0';                    
+        *colon = '\0';
         char *key = line;
+        //if (key[0] == '\0') continue;
+
         char *val = skip_ws(colon + 1);
+        //if (val[0] == '\0') continue;
 
         if (h->count < MAX_HEADERS) {
             h->keys[h->count] = key;
@@ -35,8 +39,11 @@ int main(void) {
     char raw[] =
         "Host: example.com\n"
         "Accept: */*\n"
-        "Connection\n"                     
-        "User-Agent: memdbg-cli\n";
+        "Connection\n"  
+        ":TestValue\n"                   // 추가
+        "User-Agent: memdbg-cli\n"
+        ":\n"                            // 추가
+        "TestKey:\n";                    // 추가
 
     Headers h = { .count = 0 };
     parse_headers(raw, &h);                

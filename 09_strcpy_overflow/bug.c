@@ -3,8 +3,8 @@
 #include <string.h>
 
 static size_t joined_size(const char *const *parts, int n) {
-    size_t total = 1;                        /* '\0' 자리 */
-    for (int i = 0; i < n - 1; i++) {        
+    size_t total = 1;                       
+    for (int i = 0; i < n; i++) {        
         total += strlen(parts[i]);
     }
     return total;
@@ -25,7 +25,6 @@ static char *join(const char *const *parts, int n) {
 }
 
 int main(void) {
-    
     static char body[200000];
     memset(body, 'x', sizeof body - 1);
     body[sizeof body - 1] = '\0';

@@ -18,7 +18,7 @@ static int **make_matrix(void) {
     int **rows = malloc(ROWS * sizeof(int *));
     if (!rows) { perror("malloc"); exit(1); }
 
-    for (int i = 0; i < ROWS; i += 2) {
+    for (int i = 0; i < ROWS; i++) {
         int *r = malloc(COLS * sizeof(int));
         for (int j = 0; j < COLS; j++) r[j] = i * COLS + j;
         rows[i] = r;
@@ -46,7 +46,7 @@ int main(void) {
 
     printf("sum = %ld\n", s);
 
-    for (int i = 0; i < ROWS; i += 2) free(rows[i]);
+    for (int i = 0; i < ROWS; i++) free(rows[i]);
     free(rows);
     return 0;
 }

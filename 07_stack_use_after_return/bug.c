@@ -4,24 +4,20 @@
 
 #define MAX_LINES 8
 typedef struct {
-    char **lines;   
+    char *lines[MAX_LINES];   
     int    count;
 } LineView;
 
-static void view_set(LineView *out, char **arr, int n) {
-    out->lines = arr;
-    out->count = n;
+static void view_set(LineView *out, char *text) {
+    out->lines[out->count] = text;
+    out->count++;
 }
 
 static void split_lines(LineView *out, char *text) {
-    char *parts[MAX_LINES];              
     int n = 0;
 
     for (char *ln = strtok(text, "\n"); ln && n < MAX_LINES; ln = strtok(NULL, "\n"))
-        parts[n++] = ln;
-
-    view_set(out, parts, n);      
-
+        view_set(out, ln);        
 }
 
 static void warm_stack(void) {
