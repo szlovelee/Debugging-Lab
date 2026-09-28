@@ -11,6 +11,11 @@ typedef struct {
 } Image;
 
 static Image *image_new(int width, int height, int channels) {
+    if (width < 0 || height < 0) return NULL;
+
+    size_t max_pixels = SIZE_MAX / channels;
+    if (width > max_pixels / height) return NULL; 
+
     Image *img = malloc(sizeof *img);
     if (!img) { perror("malloc"); exit(1); }
     img->width = width;
@@ -18,7 +23,7 @@ static Image *image_new(int width, int height, int channels) {
     img->channels = channels;
 
     img->nbytes = (size_t)width * (size_t)height * (size_t)channels;
-    img->px = malloc((size_t)img->nbytes);
+    img->px = malloc(img->nbytes);
     if (!img->px) { perror("malloc px"); exit(1); }
     return img;
 }
@@ -26,14 +31,15 @@ static Image *image_new(int width, int height, int channels) {
 static void image_fill(Image *img, unsigned char value) {
     size_t total = img->nbytes;
     for (size_t i = 0; i < total; i++) {
-        printf("%ld / %ld\n", i, total);
         img->px[i] = value;                     
     }
 }
 
 int main(void) {
     Image *img = image_new(65536, 65536, 4);
-    printf("allocated nbytes(int)=%d for %dx%d x%d\n",
+    if (!img) { perror("invalid image size"); exit(1); }
+
+    printf("allocated nbytes(int)=%ld for %dx%d x%d\n",
            img->nbytes, img->width, img->height, img->channels);
 
     image_fill(img, 0xFF);                       
